@@ -1,0 +1,70 @@
+using System;
+using System.Collections.Generic;
+
+class GFG
+
+	static int pageFaults(int []pages,
+				int n, int capacity)
+	{
+		HashSet<int> s = new HashSet<int>(capacity);
+		Dictionary<int,
+				int> indexes = new Dictionary<int,
+												int>();
+		int page_faults = 0;
+		for (int i = 0; i < n; i++)
+		{
+			if (s.Count < capacity)
+			{
+				if (!s.Contains(pages[i]))
+				{
+					s.Add(pages[i]);
+					page_faults++;
+				}
+				if(indexes.ContainsKey(pages[i]))
+					indexes[pages[i]] = i;
+				else
+					indexes.Add(pages[i], i);
+			}
+	
+		
+			else
+			{
+				
+				if (!s.Contains(pages[i]))
+				{
+					int lru = int.MaxValue, val = int.MinValue;
+										
+					foreach (int itr in s)
+					{
+						int temp = itr;
+						if (indexes[temp] < lru)
+						{
+							lru = indexes[temp];
+							val = temp;
+						}
+					}
+					s.Remove(val);
+					indexes.Remove(val);
+					s.Add(pages[i])
+					page_faults++;
+				}
+				if(indexes.ContainsKey(pages[i]))
+					indexes[pages[i]] = i;
+				else
+					indexes.Add(pages[i], i);
+			}
+		}
+		return page_faults;
+	}
+	public static void Main(String []args)
+	{
+		int []pages = {7, 0, 1, 2, 0, 3,
+					0, 4, 2, 3, 0, 3, 2};
+		
+		int capacity = 4;
+		
+		Console.WriteLine(pageFaults(pages,
+						pages.Length, capacity));
+	}
+}
+
